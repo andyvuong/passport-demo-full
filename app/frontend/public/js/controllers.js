@@ -1,33 +1,71 @@
 var mp4Controllers = angular.module('passportControllers', []);
 
-mp4Controllers.controller('LoginController', ['$scope', 'CommonData'  , function($scope, CommonData) {
-  $scope.data = "";
-   $scope.displayText = ""
+mp4Controllers.controller('LoginController', ['$scope', '$http',  function($scope, $http) {
+  var url = "http://localhost:3000/api/user/login";
+  
+  // login into our app
+  $scope.submit = function(username, password) {
+    $http.post(url, data)
+      .success(function(data) {
+        var data = {
+          username: username,
+          password: password
+        }
+      })
+      .error(function(err) {
 
-  $scope.setData = function(){
-    CommonData.setData($scope.data);
-    $scope.displayText = "Data set"
 
+      }); 
   };
 
 }]);
 
-mp4Controllers.controller('SignupController', ['$scope', 'CommonData' , function($scope, CommonData) {
-  $scope.data = "";
+mp4Controllers.controller('SignupController', ['$scope', '$http', function($scope, $http) {
+  var url = "http://localhost:3000/api/user/signin";
+  
+  // sign into our app
+  $scope.submit = function(username, password) {
+    var data = {
+      username: username,
+      password: password
+    }
 
-  $scope.getData = function(){
-    $scope.data = CommonData.getData();
+    $http.post(url, data)
+      .success(function(data) {
 
+      })
+      .error(function(err) {
+        
+      }); 
   };
 
 }]);
 
+mp4Controllers.controller('profileController', ['$scope', '$http', function($scope, $http) {
+    var url = "http://localhost:3000/api/user/logout";
 
-mp4Controllers.controller('profileController', ['$scope', '$http', 'Llamas', '$window' , function($scope, $http,  Llamas, $window) {
+    // sign into our app
+    $scope.logout = function() {
+      $http.get(url)
+        .success(function(data) {
 
-  Llamas.get().success(function(data){
-    $scope.llamas = data;
-  });
+        })
+        .error(function(err) {
+          
+        }); 
+    };
+
+    $scope.access = function() {
+      var url = "http://localhost:3000/api/protected";
+      $http.get(url)
+        .success(function(data) {
+
+        })
+        .error(function(err) {
+          
+        }); 
+    };
+
 
 
 }]);
