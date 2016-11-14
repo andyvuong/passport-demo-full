@@ -1,7 +1,7 @@
 module.exports = function(router, passport) {
 
     router.post('/signup', passport.authenticate('local-signup'), function(req, res) {
-        es.status(200).json({ user: req.user.email });
+        res.status(200).json({ user: req.user.email });
     });
 
     router.post('/login', passport.authenticate('local-login'), function(req, res) {
