@@ -1,71 +1,49 @@
 var mp4Controllers = angular.module('passportControllers', []);
 
-mp4Controllers.controller('LoginController', ['$scope', '$http',  function($scope, $http) {
-  var url = "http://localhost:3000/api/user/login";
-  
-  // login into our app
-  $scope.submit = function(username, password) {
-    $http.post(url, data)
-      .success(function(data) {
+mp4Controllers.controller('LoginController', ['$scope', '$http', '$location',  function($scope, $http, $location) {
+
+    $scope.submit = function() {
         var data = {
-          username: username,
-          password: password
+            email: $scope.email,
+            password: $scope.password
         }
-      })
-      .error(function(err) {
 
-
-      }); 
-  };
-
+        $http.post('/api/login', data)
+            .success(function(data) {
+                $location.path('/profile');
+            }).error(function(data) {
+        });
+    };
 }]);
 
-mp4Controllers.controller('SignupController', ['$scope', '$http', function($scope, $http) {
-  var url = "http://localhost:3000/api/user/signin";
-  
-  // sign into our app
-  $scope.submit = function(username, password) {
-    var data = {
-      username: username,
-      password: password
-    }
+mp4Controllers.controller('SignupController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+    $scope.submit = function() {
+        var data = {
+            email: $scope.email,
+            password: $scope.password
+        }
+        $http.post('/api/signup', data)
+            .success(function(data) {
+                $location.path('/profile');
+        }).error(function(data) {
 
-    $http.post(url, data)
-      .success(function(data) {
-
-      })
-      .error(function(err) {
-        
-      }); 
-  };
-
+        });
+    };
 }]);
 
-mp4Controllers.controller('profileController', ['$scope', '$http', function($scope, $http) {
-    var url = "http://localhost:3000/api/user/logout";
+mp4Controllers.controller('ProfileController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+    $http.get('/api/profile')
+        .success(function(data) {
+            $scope.email = data.user.email;
+            console.log(data);
+        }).error(function(data) {
+            $location.path('/login');
+        });
 
-    // sign into our app
     $scope.logout = function() {
-      $http.get(url)
-        .success(function(data) {
-
-        })
-        .error(function(err) {
-          
-        }); 
+        $http.get('/api/logout')
+            .success(function(data) {
+                $location.path('/login');
+            });
     };
-
-    $scope.access = function() {
-      var url = "http://localhost:3000/api/protected";
-      $http.get(url)
-        .success(function(data) {
-
-        })
-        .error(function(err) {
-          
-        }); 
-    };
-
-
-
 }]);

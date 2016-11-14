@@ -1,4 +1,4 @@
-var app = angular.module('passport', ['ngRoute', 'passportControllers', 'passportServices']);
+var app = angular.module('passport', ['ngRoute', 'passportControllers']);
 
 app.config(['$routeProvider', function($routeProvider) {
   $routeProvider.

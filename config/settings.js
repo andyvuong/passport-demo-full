@@ -1,3 +1,3 @@
 module.exports = {
-    'url' : 'mongodb://localhost/passport-demo'
+    'url' : 'mongodb://andy:andy@ds029814.mlab.com:29814/web-demo'
 };
