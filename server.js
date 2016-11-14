@@ -1,29 +1,37 @@
-var express = require('express'),
-	app = express(),
-	port = process.env.PORT || 3000,
-	mongoose = require('mongoose'),
-	passport = require('passport'),
-	morgan = require('morgan'),
-	cookieParser = require('cookie-parser'),
-	bodyParser = require('body-parser'),
-	session = require('express-session'),
-	configDB = require('./config/database.js');
+var express = require('express');
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var app = express();
 
-mongoose.connect(configDB.url); // db connection
-require('./config/passport')(passport);
+app.use(cookieParser())
+app.use(bodyParser.json());
 
-app.use(morgan('dev'));
-app.use(cookieParser());
-app.use(bodyParser());
+var router = express.Router();
+var passport = require('passport');
+var settings = require('./config/settings');
 
-app.use(session({ secret: 'passport demo' }));
-app.use(express.static(__dirname + '/frontend'));
-
+mongoose.connect(settings.url);
+app.use(session({ secret: 'passport' }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./app/routes.js')(app, passport);
+/**
+ * Configure the passport instance by passing it to our passport module and as middleware to our express
+ * app instance.
+ */
+require('./app/backend/auth/passport')(passport);
 
-app.listen(port);
-console.log('Server running on port ' + port);
+/**
+ * Pass our router and passport to our handler for the route /api/user
+ */
+app.use('/api', require('./app/backend/routes/route')(router, passport));
+
+
+app.use(express.static('app/frontend/public'));
+
+var port = process.env.PORT || 3000;
+console.log("Express server running on " + port);
+app.listen(process.env.PORT || port);
